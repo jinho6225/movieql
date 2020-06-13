@@ -1,55 +1,46 @@
+const axios = require('axios');
+const BASE_URL = 'https://yts.mx/api/v2/';
+const LIST_MOVIES_URL = `${BASE_URL}list_movies.json`;
+const MOVIE_DETAILS_URL = `${BASE_URL}movie_details.json`;
+const MOVIE_SUGGESTIONS_URL = `${BASE_URL}movie_suggestions.json`;
+
 const db = {
-  movies: [
-    {
-      id: 0,
-      name: 'superman',
-      score: 88,
-    },
-    {
-      id: 1,
-      name: 'iron man',
-      score: 98,
-    },
-    {
-      id: 2,
-      name: 'hsasdf',
-      score: 77,
-    },
-    {
-      id: 3,
-      name: 'ddd',
-      score: 44,
-    },
-    {
-      id: 4,
-      name: 'aaa',
-      score: 28,
-    },
-  ],
-  getMovies: function () {
-    return this.movies;
+  getMovies: async (limit, rating) => {
+    const {
+      data: {
+        data: { movies },
+      },
+    } = await axios(LIST_MOVIES_URL, {
+      params: {
+        limit,
+        minimum_rating: rating,
+      },
+    });
+    return movies;
   },
-  getById: function (id) {
-    const filteredMovies = this.movies.filter((movie) => movie.id === id);
-    return filteredMovies[0];
+  getMovie: async (id) => {
+    const {
+      data: {
+        data: { movie },
+      },
+    } = await axios(MOVIE_DETAILS_URL, {
+      params: {
+        movie_id: id,
+      },
+    });
+    return movie;
   },
-  deleteMovie: function (id) {
-    const cleamedMovies = this.movies.filter((movie) => movie.id !== id);
-    if (this.movies.length > cleamedMovies.length) {
-      this.movies = cleamedMovies;
-      return true;
-    } else {
-      return false;
-    }
-  },
-  addMovie: function (name, score) {
-    const newMovie = {
-      id: `${this.movies.length + 1}`,
-      name,
-      score,
-    };
-    this.movies.push(newMovie);
-    return newMovie;
+  getSuggestions: async (id) => {
+    const {
+      data: {
+        data: { movies },
+      },
+    } = await axios(MOVIE_SUGGESTIONS_URL, {
+      params: {
+        movie_id: id,
+      },
+    });
+    return movies;
   },
 };
 module.exports = db;

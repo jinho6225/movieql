@@ -2,12 +2,9 @@ const db = require('./db');
 
 const resolvers = {
   Query: {
-    movies: () => db.getMovies(),
-    movie: (_, { id }) => db.getById(id),
-  },
-  Mutation: {
-    addMovie: (_, { name, score }) => db.addMovie(name, score),
-    deleteMovie: (_, { id }) => db.deleteMovie(id),
+    movies: (_, { rating, limit }) => db.getMovies(limit, rating),
+    movie: (_, { id }) => db.getMovie(id),
+    suggestions: (_, { id }) => db.getSuggestions(id),
   },
 };
 
